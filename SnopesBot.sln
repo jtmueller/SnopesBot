@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "SnopesBot", "SnopesBot\SnopesBot.ccproj", "{DDF65EAA-C003-44DD-AD5A-9F2D8ABED8FB}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SnopesBot.Worker", "SnopesBot.Worker\SnopesBot.Worker.fsproj", "{1687BE36-B60C-4C32-9BBB-5A400115C220}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DDF65EAA-C003-44DD-AD5A-9F2D8ABED8FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDF65EAA-C003-44DD-AD5A-9F2D8ABED8FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDF65EAA-C003-44DD-AD5A-9F2D8ABED8FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDF65EAA-C003-44DD-AD5A-9F2D8ABED8FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1687BE36-B60C-4C32-9BBB-5A400115C220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1687BE36-B60C-4C32-9BBB-5A400115C220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1687BE36-B60C-4C32-9BBB-5A400115C220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1687BE36-B60C-4C32-9BBB-5A400115C220}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
