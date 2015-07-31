@@ -11,27 +11,29 @@ open System.Threading
 open Microsoft.WindowsAzure
 open Microsoft.WindowsAzure.Diagnostics
 open Microsoft.WindowsAzure.ServiceRuntime
+open Akka.Actor
+open Akka.FSharp
 
 type WorkerRole() =
-    inherit RoleEntryPoint() 
+    inherit RoleEntryPoint()
 
-    // This is a sample worker implementation. Replace with your logic.
+    let cts = new CancellationTokenSource()
+    let mutable system: ActorSystem option = None
 
-    let log message (kind : string) = Trace.TraceInformation(message, kind)
+    override this.OnStart() = 
 
-    override wr.Run() =
+        let sys = Configuration.load() |> System.create "snopesbot"
+        let outputActor = spawnObj sys "telegram-output" <@ fun () -> TelegramOutputActor() @>
+        let botActor = spawnObj sys "bot" <@ fun () -> BotActor(outputActor) @>
+        system <- Some(sys)
 
-        log "SnopesBot.Worker entry point called" "Information"
-        while(true) do 
-            Thread.Sleep(10000)
-            log "Working" "Information"
-
-    override wr.OnStart() = 
-
-        // Set the maximum number of concurrent connections 
-        ServicePointManager.DefaultConnectionLimit <- 12
-       
-        // For information on handling configuration changes
-        // see the MSDN topic at http://go.microsoft.com/fwlink/?LinkId=166357.
+        Async.Start(TelegramInput.startPolling botActor 0, cts.Token)
 
         base.OnStart()
+
+    override this.OnStop() =
+        cts.Cancel()
+        system |> Option.iter (fun s -> s.Shutdown())
+        system <- None
+        base.OnStop()
+        
