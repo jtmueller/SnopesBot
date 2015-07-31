@@ -13,18 +13,32 @@ module Utils =
         |> Seq.map (fun (k, v) -> k + "=" + v)
         |> String.concat "&"
 
-    let methodUri (methodName:string) (parameters:#seq<string * string>) =
+    let methodUri (methodName:string) (parameters:(string * string) list) =
         let builder = UriBuilder(Uri(baseUri, methodName))
-        builder.Query <- queryString parameters
+        if parameters <> [] then
+            builder.Query <- queryString parameters
         builder.Uri
 
     let inline isNull (x:obj) = Object.ReferenceEquals(x, null)
 
     let isNotNull: obj -> bool = (isNull >> not)
 
-    //type System.Net.Http.HttpClient with
-    //    member x.AsyncGet() =
-    //        x.Get
+    type System.Net.Http.HttpClient with
+        member x.AsyncGet(uri:Uri, ct:Threading.CancellationToken) =
+            x.GetAsync(uri, ct) |> Async.AwaitTask
+
+        member x.AsyncGet(uri:Uri) =
+            x.GetAsync(uri) |> Async.AwaitTask
+
+        member x.AsyncPost(uri:Uri, content:System.Net.Http.HttpContent) =
+            x.PostAsync(uri, content) |> Async.AwaitTask
+
+        member x.AsyncPost(uri:Uri, content:System.Net.Http.HttpContent, ct) =
+            x.PostAsync(uri, content, ct) |> Async.AwaitTask
+
+    type System.Net.Http.HttpContent with
+        member x.AsyncReadAsStream() =
+            x.ReadAsStreamAsync() |> Async.AwaitTask
 
     let private epoch = DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)
 

@@ -94,6 +94,11 @@ type ChatType =
     | User of User
     | GroupChat of GroupChat
 
+    member x.chat_id =
+        match x with
+        | User u -> u.id
+        | GroupChat g -> g.id
+
 type MessageBody =
     | Text of string
     | Audio of Audio
@@ -122,3 +127,85 @@ type Message = {
     reply_to_message: Message option
     caption: string option
 }
+
+type ReplyMarkup =
+    | KeyboardMarkup of ReplyKeyboardMarkup
+    | KeyboardHide of ReplyKeyboardHide
+    | ForceReply of ForceReply
+
+type SendMessage = {
+    chat_id: int
+    text: string
+    disable_web_page_preview: bool option
+    reply_to_message_id: int option
+    reply_markup: ReplyMarkup option
+}
+
+type SendPhoto = {
+    chat_id: int
+    photo: string
+    caption: string option
+    reply_to_message_id: int option
+    reply_markup: ReplyMarkup option
+}
+
+type SendAudio = {
+    chat_id: int
+    audio: string
+    duration: int option
+    reply_to_message_id: int option
+    reply_markup: ReplyMarkup option
+}
+
+type SendDocument = {
+    chat_id: int
+    document: string
+    reply_to_message_id: int option
+    reply_markup: ReplyMarkup option
+}
+
+type SendSticker = {
+    chat_id: int
+    sticker: string
+    reply_to_message_id: int option
+    reply_markup: ReplyMarkup option
+}
+
+type SendVideo = {
+    chat_id: int
+    video: string
+    duration: int option
+    caption: string option
+    reply_to_message_id: int option
+    reply_markup: ReplyMarkup option
+}
+
+type SendLocation = {
+    chat_id: int
+    latitude: float
+    longitude: float
+    reply_to_message_id: int option
+    reply_markup: ReplyMarkup option
+}
+
+type ChatAction =
+    | typing = 1
+    | upload_photo = 2
+    | record_video = 3
+    | upload_video = 4
+    | record_audio = 5
+    | upload_audio = 6
+    | upload_document = 7
+    | find_location = 8
+
+type TelegramBotMethod =
+    | GetMe
+    | SendMessage of SendMessage
+    | ForwardMessage of chat_id:int * from_chat_id:int * message_id:int
+    | SendPhoto of SendPhoto
+    | SendAudio of SendAudio
+    | SendDocument of SendDocument
+    | SendLocation of SendLocation
+    | SendChatAction of chat_id:int * action:ChatAction
+    | GetUserProfilePhotos of user_id:int
+

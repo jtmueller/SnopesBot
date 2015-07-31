@@ -79,21 +79,23 @@ module TelegramInput =
         let! ct = Async.CancellationToken
         use client = new HttpClient()
         let uri = getUpdatesUri offset
-        let! response = client.GetAsync(uri, ct) |> Async.AwaitTask
+        let! response = client.AsyncGet(uri, ct)
         try
             response.EnsureSuccessStatusCode() |> ignore
 
-            use! incoming = response.Content.ReadAsStreamAsync() |> Async.AwaitTask
+            use! incoming = response.Content.AsyncReadAsStream()
             use sr = new StreamReader(incoming)
             use jtr = new JsonTextReader(sr)
-            let updates = JArray.Load(jtr)
+            let updates = JObject.Load(jtr)
             let mutable lastOffset = offset
 
-            for update in updates do
-                lastOffset <- update?update_id
-                let message: JObject = update?message
-                if isNotNull message then
-                    processor.Tell(parseMessage message, ActorRefs.NoSender)
+            if updates?ok then
+                let results: JArray = updates?result
+                for update in results do
+                    lastOffset <- update?update_id
+                    let message: JObject = update?message
+                    if isNotNull message then
+                        processor.Tell(parseMessage message, ActorRefs.NoSender)
 
             return! startPolling processor (lastOffset + 1)
 

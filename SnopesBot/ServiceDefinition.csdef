@@ -7,7 +7,7 @@
     <Certificates>
     </Certificates>
     <Endpoints>
-      <InputEndpoint name="telegram" protocol="https" port="10100" />
+      <!--<InputEndpoint name="telegram" protocol="https" port="10100" />-->
     </Endpoints>
   </WorkerRole>
 </ServiceDefinition>
