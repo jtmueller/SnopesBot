@@ -40,7 +40,7 @@ type TelegramOutputActor() =
         match msg with
         | GetMe ->
             let uri = methodUri "getMe" []
-            let! response = client.AsyncGet(uri, ct)
+            use! response = client.AsyncGet(uri, ct)
             response.EnsureSuccessStatusCode() |> ignore
             use! incoming = response.Content.AsyncReadAsStream()
             let user = deserialize<User> incoming
@@ -58,14 +58,14 @@ type TelegramOutputActor() =
             |> Option.iter (fun x -> formData.Add("reply_markup", serialize x))
             
             use content = new FormUrlEncodedContent(formData |> Seq.map kvp)
-            let! response = client.AsyncPost(uri, content, ct)
+            use! response = client.AsyncPost(uri, content, ct)
             response.EnsureSuccessStatusCode() |> ignore
 
         | SendChatAction(chat_id, action) ->
             let uri =
                 [("chat_id", string chat_id); ("action", string action)]
                 |> methodUri "sendChatAction"
-            let! response = client.AsyncGet(uri)
+            use! response = client.AsyncGet(uri)
             response.EnsureSuccessStatusCode() |> ignore
 
         | _ ->
@@ -77,7 +77,7 @@ type TelegramOutputActor() =
         | :? TelegramBotMethod as botMethod ->
             Async.Start(handleMethod botMethod, cts.Token)
         | _ ->
-            x.Unhandled()
+            x.Unhandled(msg)
 
     override x.PostStop() =
         cts.Cancel()

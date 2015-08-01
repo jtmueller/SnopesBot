@@ -3,7 +3,7 @@
   <Role name="SnopesBot.Worker">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=snopesbot;AccountKey=AtLWDxJ2c5/BehaonRyjwa4GYyF3It7Tc+mlRjRpLz+s5+mj7+hbDDYRxfioLLucLrEaMmv7caaQ4WETQ2VG6w==" />
     </ConfigurationSettings>
     <Certificates>
     </Certificates>

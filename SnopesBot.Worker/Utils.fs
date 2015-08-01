@@ -50,8 +50,24 @@ namespace Newtonsoft.Json.Linq
 
 [<AutoOpen>]
 module Extensions =
+
     let (?) (this:JToken) (prop:string) : 'result =
         this.Value<'result>(prop)
 
     let (?<-) (this:JToken) (prop:string) (value:'value) =
         this.[prop] <- value
+
+namespace Akka.FSharp
+
+[<AutoOpen>]
+module Extensions =
+    open Akka.Actor
+    
+    let pipeToOpt (recipient: ICanTell) (sender: IActorRef) (computation: Async<'T option>) : unit =  
+        let success (result: 'T option) : unit = 
+            match result with
+            | Some x ->
+                recipient.Tell(x, sender) 
+            | None -> ()
+        let failure (err: exn) : unit = recipient.Tell(Status.Failure(err), sender)
+        Async.StartWithContinuations(computation, success, failure, failure) 
